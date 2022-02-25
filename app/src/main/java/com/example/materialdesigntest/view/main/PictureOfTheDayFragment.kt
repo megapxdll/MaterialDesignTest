@@ -5,12 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import coil.load
 import com.example.materialdesigntest.databinding.FragmentMainBinding
+import com.example.materialdesigntest.viewModel.PictureOfTheDayState
+import com.example.materialdesigntest.viewModel.PictureOfTheDayViewModel
 
 class PictureOfTheDayFragment : Fragment() {
     private var _binding: FragmentMainBinding ?= null
     val binding : FragmentMainBinding
     get ()= _binding!!
+
+
+    companion object {
+        fun newInstance() = PictureOfTheDayFragment()
+    }
+    private  val viewModel : PictureOfTheDayViewModel by lazy {
+        ViewModelProvider(this).get(PictureOfTheDayViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +34,21 @@ class PictureOfTheDayFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.sendServerRequest()
+    }
+
+    fun renderData(pictureOfTheDayState: PictureOfTheDayState) {
+        when (pictureOfTheDayState) {
+            is PictureOfTheDayState.Error -> TODO()
+            is PictureOfTheDayState.Loading -> TODO()
+            is PictureOfTheDayState.Success -> {
+                binding.imageView.load(pictureOfTheDayState.serverResponseData.hdurl)
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
