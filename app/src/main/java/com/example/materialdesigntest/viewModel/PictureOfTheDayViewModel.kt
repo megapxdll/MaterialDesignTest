@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.materialdesigntest.BuildConfig
 import com.example.materialdesigntest.repository.PictureOfTheDayResponseData
 import com.example.materialdesigntest.repository.PictureOfTheDayRetrofitImpl
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +33,9 @@ class PictureOfTheDayViewModel (
                             liveData.postValue(PictureOfTheDayState.Success(it))
                         }
                     } else {
-                        TODO("Not yet implemented")
+                        response.body()?.let {
+                            liveData.postValue(PictureOfTheDayState.Loading(6))
+                        }
                     }
                 }
 

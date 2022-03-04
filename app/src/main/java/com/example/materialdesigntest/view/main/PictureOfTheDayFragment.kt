@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.example.materialdesigntest.R
+import com.example.materialdesigntest.databinding.BottomSheetLayoutBinding
 import com.example.materialdesigntest.databinding.FragmentMainBinding
 import com.example.materialdesigntest.view.MainActivity
 import com.example.materialdesigntest.view.chips.ChipsFragment
@@ -102,9 +103,11 @@ class PictureOfTheDayFragment : Fragment() {
     fun renderData(pictureOfTheDayState: PictureOfTheDayState) {
         when (pictureOfTheDayState) {
             is PictureOfTheDayState.Error -> TODO()
-            is PictureOfTheDayState.Loading -> "qweq"
+            is PictureOfTheDayState.Loading -> "Loading..."
             is PictureOfTheDayState.Success -> {
                 binding.imageView.load(pictureOfTheDayState.serverResponseData.hdurl)
+                binding.included.bottomSheetDescriptionHeader.text = pictureOfTheDayState.serverResponseData.title
+                binding.included.bottomSheetDescription.text = pictureOfTheDayState.serverResponseData.explanation
             }
         }
     }
