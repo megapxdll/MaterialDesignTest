@@ -1,5 +1,9 @@
 package com.example.materialdesigntest.viewModel
 
+import android.app.usage.UsageEvents
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +11,7 @@ import com.example.materialdesigntest.BuildConfig
 import com.example.materialdesigntest.repository.PictureOfTheDayResponseData
 import com.example.materialdesigntest.repository.PictureOfTheDayRetrofitImpl
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,14 +38,12 @@ class PictureOfTheDayViewModel (
                             liveData.postValue(PictureOfTheDayState.Success(it))
                         }
                     } else {
-                        response.body()?.let {
-                            liveData.postValue(PictureOfTheDayState.Loading(6))
-                        }
+                        liveData.value = PictureOfTheDayState.Loading(null)
                     }
                 }
 
                 override fun onFailure(call: Call<PictureOfTheDayResponseData>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    liveData.value = PictureOfTheDayState.Error(t)
                 }
             }
         )
